@@ -1,7 +1,9 @@
 package by.shakhau.ps.product.integration;
 
+import by.shakhau.ps.product.controller.dto.request.CreateProductRequest;
+import by.shakhau.ps.product.controller.dto.request.PatchProductRequest;
 import by.shakhau.ps.product.controller.dto.request.ProductIdsRequest;
-import by.shakhau.ps.product.controller.dto.request.ProductRequest;
+import by.shakhau.ps.product.controller.dto.request.ProductListRequest;
 import by.shakhau.ps.product.repository.ProductRepository;
 import by.shakhau.ps.product.repository.entity.ProductEntity;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,7 +38,7 @@ class ProductControllerIT extends AbstractIntegrationTest {
 
     @Test
     void shouldCreateProductWhenRequestIsValid() throws Exception {
-        var request = new ProductRequest();
+        var request = new CreateProductRequest();
         request.setName("iPhone");
         request.setDescription("Phone");
         request.setPrice(new BigDecimal("999.99"));
@@ -52,6 +54,34 @@ class ProductControllerIT extends AbstractIntegrationTest {
         List<ProductEntity> products = repository.findAll();
 
         assertThat(products).hasSize(1);
+        assertThat(products.getFirst().getName()).isEqualTo("iPhone");
+    }
+
+    @Test
+    void shouldCreateProductListWhenRequestIsValid() throws Exception {
+        var iPhone = new CreateProductRequest();
+        iPhone.setName("iPhone");
+        iPhone.setDescription("Phone");
+        iPhone.setPrice(new BigDecimal("999.99"));
+
+        var samsung = new CreateProductRequest();
+        samsung.setName("Samsung");
+        samsung.setDescription("Phone");
+        samsung.setPrice(new BigDecimal("700"));
+
+        mockMvc.perform(post("/products/list")
+                        .header(AUTHORIZATION, AUTHORIZATION_HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(new ProductListRequest(List.of(iPhone, samsung)))))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$[0].name").value("iPhone"))
+                .andExpect(jsonPath("$[0].price").value(999.99))
+                .andExpect(jsonPath("$[1].name").value("Samsung"))
+                .andExpect(jsonPath("$[1].price").value(700));
+
+        List<ProductEntity> products = repository.findAll();
+
+        assertThat(products).hasSize(2);
         assertThat(products.getFirst().getName()).isEqualTo("iPhone");
     }
 
@@ -153,7 +183,7 @@ class ProductControllerIT extends AbstractIntegrationTest {
 
         ProductEntity saved = repository.save(product);
 
-        var request = new ProductRequest();
+        var request = new PatchProductRequest();
         request.setName("New name");
         request.setDescription("New");
         request.setPrice(BigDecimal.valueOf(200));
@@ -211,7 +241,7 @@ class ProductControllerIT extends AbstractIntegrationTest {
 
     @Test
     void shouldReturnBadRequestWhenProductRequestIsInvalid() throws Exception {
-        var request = new ProductRequest();
+        var request = new CreateProductRequest();
 
         request.setName("");
         request.setPrice(BigDecimal.ZERO);

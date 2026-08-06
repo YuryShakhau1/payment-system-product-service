@@ -1,6 +1,7 @@
 package by.shakhau.ps.product.controller.dto.mapper;
 
-import by.shakhau.ps.product.controller.dto.request.ProductRequest;
+import by.shakhau.ps.product.controller.dto.request.CreateProductRequest;
+import by.shakhau.ps.product.controller.dto.request.PatchProductRequest;
 import by.shakhau.ps.product.controller.dto.response.ProductResponse;
 import by.shakhau.ps.product.service.model.Product;
 import org.mapstruct.Mapper;
@@ -12,6 +13,6 @@ import java.util.UUID;
 public interface ProductDtoMapper {
 
     ProductResponse toResponse(Product product);
-    Product toModel(ProductRequest request);
-    Product toModel(UUID id, ProductRequest request);
+    Product toModel(CreateProductRequest request);
+    Product toModel(UUID id, PatchProductRequest request);
 }

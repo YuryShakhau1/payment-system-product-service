@@ -17,4 +17,4 @@ spring:
     enabled: true
 
   config:
-    import: optional:file:.env[.properties]
+    import: optional:file:../.env[.properties]

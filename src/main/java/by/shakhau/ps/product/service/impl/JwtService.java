@@ -1,5 +1,6 @@
 package by.shakhau.ps.product.service.impl;
 
+import by.shakhau.ps.product.config.SecurityProps;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ public class JwtService {
 
     private final PublicKey publicKey;
 
-    public JwtService(by.shakhau.ps.product.config.SecurityProps securityProps) {
+    public JwtService(SecurityProps securityProps) {
         this.publicKey = parsePublicKey(securityProps.getPublicKeyContent());
     }
 

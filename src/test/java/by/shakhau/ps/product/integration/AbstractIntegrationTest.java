@@ -59,7 +59,7 @@ public abstract class AbstractIntegrationTest {
     @BeforeEach
     public void setUp() {
         Claims claims = mock(Claims.class);
-        when(claims.getExpiration()).thenReturn(new Date(System.currentTimeMillis() + 1000000));
+        when(claims.getExpiration()).thenReturn(new Date(System.currentTimeMillis() + 100000));
         when((List<String>) claims.get("roles")).thenReturn(Collections.singletonList("ROLE_ADMIN"));
         when(jwtService.getClaims(any())).thenReturn(claims);
         when(claims.getSubject()).thenReturn(UUID.randomUUID().toString());
