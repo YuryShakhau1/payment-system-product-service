@@ -1,4 +1,4 @@
-package by.shakhau.ps.product.model;
+package by.shakhau.ps.product.repository.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;

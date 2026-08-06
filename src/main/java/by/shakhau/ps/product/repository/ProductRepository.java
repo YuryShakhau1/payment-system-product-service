@@ -1,12 +1,19 @@
 package by.shakhau.ps.product.repository;
 
-import by.shakhau.ps.product.model.Product;
+import by.shakhau.ps.product.repository.entity.ProductEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
 import java.util.UUID;
 
-public interface ProductRepository extends JpaRepository<Product, UUID> {
+public interface ProductRepository extends JpaRepository<ProductEntity, UUID> {
 
-    List<Product> findByNameStartingWith(String name);
+    Page<ProductEntity> findByNameStartingWith(String name, Pageable pageable);
+
+    @Query("UPDATE ProductEntity SET deleted = :deleted WHERE id = :id")
+    @Modifying
+    void updateDeleted(UUID id, Boolean deleted);
 }
