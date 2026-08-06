@@ -2,6 +2,7 @@ package by.shakhau.ps.product.controller;
 
 import by.shakhau.ps.product.controller.dto.response.ErrorResponse;
 import by.shakhau.ps.product.service.exception.ResourceForbiddenException;
+import by.shakhau.ps.product.service.exception.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,6 +33,7 @@ public class GlobalExceptionHandler {
 
     static {
         RESPONSE_STATUSES.put(ResourceForbiddenException.class, HttpStatus.BAD_REQUEST);
+        RESPONSE_STATUSES.put(ResourceNotFoundException.class, HttpStatus.NOT_FOUND);
         RESPONSE_STATUSES.put(MethodValidationException.class, HttpStatus.BAD_REQUEST);
         RESPONSE_STATUSES.put(MethodArgumentNotValidException.class, HttpStatus.BAD_REQUEST);
         RESPONSE_STATUSES.put(HandlerMethodValidationException.class, HttpStatus.BAD_REQUEST);

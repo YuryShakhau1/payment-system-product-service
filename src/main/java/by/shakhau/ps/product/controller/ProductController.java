@@ -54,7 +54,7 @@ public class ProductController {
         return ResponseEntity.ok(mapper.toResponse(service.findById(id)));
     }
 
-    @PostMapping(value = "/filter", produces = APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/filter", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ProductResponse>> findProducts(@RequestBody ProductIdsRequest request) {
         List<ProductResponse> products = service.findByIdIn(request.getIds()).stream()
                 .map(mapper::toResponse)
