@@ -1,0 +1,16 @@
+server:
+  port: ${PRODUCT_SERVICE_PORT}
+
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+  datasource:
+    url: jdbc:postgresql://postgres:${PRODUCT_SERVICE_DB_PORT}/${PRODUCT_SERVICE_DB_NAME}
+    username: ${PRODUCT_SERVICE_DB_USERNAME}
+    password: ${PRODUCT_SERVICE_DB_PASSWORD}
+
+logging:
+  level:
+    root: INFO
