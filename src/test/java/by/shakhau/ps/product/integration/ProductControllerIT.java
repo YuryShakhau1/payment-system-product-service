@@ -1,9 +1,6 @@
 package by.shakhau.ps.product.integration;
 
-<<<<<<< HEAD
 import by.shakhau.ps.product.controller.dto.request.ProductIdsRequest;
-=======
->>>>>>> c5a7ab9 (Test implemented)
 import by.shakhau.ps.product.controller.dto.request.ProductRequest;
 import by.shakhau.ps.product.repository.ProductRepository;
 import by.shakhau.ps.product.repository.entity.ProductEntity;
@@ -59,7 +56,6 @@ class ProductControllerIT extends AbstractIntegrationTest {
     }
 
     @Test
-<<<<<<< HEAD
     void shouldReturnProductsByManyIdsWhenProductsExist() throws Exception {
         var iphone = new ProductEntity();
         iphone.setName("iPhone");
@@ -87,8 +83,6 @@ class ProductControllerIT extends AbstractIntegrationTest {
     }
 
     @Test
-=======
->>>>>>> c5a7ab9 (Test implemented)
     void shouldReturnProductsWhenProductsExist() throws Exception {
         var product = new ProductEntity();
         product.setName("Samsung");

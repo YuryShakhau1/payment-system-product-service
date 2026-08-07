@@ -78,7 +78,6 @@ class ProductServiceImplTest {
     }
 
     @Test
-<<<<<<< HEAD
     void shouldReturnAllProductsWhenProductsExist() {
         UUID id1 = UUID.randomUUID();
         UUID id2 = UUID.randomUUID();
@@ -108,8 +107,6 @@ class ProductServiceImplTest {
     }
 
     @Test
-=======
->>>>>>> c5a7ab9 (Test implemented)
     void shouldReturnProductWhenProductExists() {
         UUID id = UUID.randomUUID();
 
