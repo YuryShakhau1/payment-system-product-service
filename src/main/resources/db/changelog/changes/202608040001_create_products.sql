@@ -3,6 +3,7 @@ CREATE TABLE IF NOT EXISTS products (
     name          VARCHAR(50) NOT NULL,
     price         NUMERIC(19, 2) NOT NULL,
     description   VARCHAR(500) NOT NULL,
+    deleted       BOOLEAN NOT NULL,
     created_at    TIMESTAMP NOT NULL,
     updated_at    TIMESTAMP NOT NULL
 );

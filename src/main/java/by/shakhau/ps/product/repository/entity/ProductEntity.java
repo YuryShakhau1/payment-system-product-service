@@ -1,4 +1,4 @@
-package by.shakhau.ps.product.model;
+package by.shakhau.ps.product.repository.entity;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @EqualsAndHashCode(of = { "name" }, callSuper = false)
-public class Product extends AuditableEntity {
+public class ProductEntity extends AuditableEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -25,4 +25,5 @@ public class Product extends AuditableEntity {
     private String name;
     private String description;
     private BigDecimal price;
+    private Boolean deleted;
 }
