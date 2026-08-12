@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.http.HttpHeaders.AUTHORIZATION;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -44,7 +43,6 @@ class ProductControllerIT extends AbstractIntegrationTest {
         request.setPrice(new BigDecimal("999.99"));
 
         mockMvc.perform(post("/products")
-                        .header(AUTHORIZATION, AUTHORIZATION_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
@@ -70,7 +68,6 @@ class ProductControllerIT extends AbstractIntegrationTest {
         samsung.setPrice(new BigDecimal("700"));
 
         mockMvc.perform(post("/products/list")
-                        .header(AUTHORIZATION, AUTHORIZATION_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(new ProductListRequest(List.of(iPhone, samsung)))))
                 .andExpect(status().isCreated())
@@ -189,7 +186,6 @@ class ProductControllerIT extends AbstractIntegrationTest {
         request.setPrice(BigDecimal.valueOf(200));
 
         mockMvc.perform(patch("/products/{id}", saved.getId())
-                        .header(AUTHORIZATION, AUTHORIZATION_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
@@ -211,8 +207,7 @@ class ProductControllerIT extends AbstractIntegrationTest {
 
         ProductEntity saved = repository.save(product);
 
-        mockMvc.perform(delete("/products/{id}", saved.getId())
-                        .header(AUTHORIZATION, AUTHORIZATION_HEADER))
+        mockMvc.perform(delete("/products/{id}", saved.getId()))
                 .andExpect(status().isNoContent());
 
         ProductEntity deleted = repository.findById(saved.getId()).orElseThrow();
@@ -230,8 +225,7 @@ class ProductControllerIT extends AbstractIntegrationTest {
 
         ProductEntity saved = repository.save(product);
 
-        mockMvc.perform(patch("/products/{id}/restore", saved.getId())
-                        .header(AUTHORIZATION, AUTHORIZATION_HEADER))
+        mockMvc.perform(patch("/products/{id}/restore", saved.getId()))
                 .andExpect(status().isNoContent());
 
         ProductEntity restored = repository.findById(saved.getId()).orElseThrow();
@@ -247,7 +241,6 @@ class ProductControllerIT extends AbstractIntegrationTest {
         request.setPrice(BigDecimal.ZERO);
 
         mockMvc.perform(post("/products")
-                        .header(AUTHORIZATION, AUTHORIZATION_HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest());
