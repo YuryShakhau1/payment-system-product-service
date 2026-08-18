@@ -184,6 +184,7 @@ class ProductControllerIT extends AbstractIntegrationTest {
         request.setName("New name");
         request.setDescription("New");
         request.setPrice(BigDecimal.valueOf(200));
+        request.setDeleted(false);
 
         mockMvc.perform(patch("/products/{id}", saved.getId())
                         .contentType(MediaType.APPLICATION_JSON)

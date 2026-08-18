@@ -12,4 +12,6 @@ public class PatchProductRequest {
     private String name;
     private String description;
     private BigDecimal price;
+
+    private Boolean deleted;
 }

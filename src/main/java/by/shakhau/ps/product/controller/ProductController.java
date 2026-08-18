@@ -84,7 +84,8 @@ public class ProductController {
 
     @PatchMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductResponse> updateProduct(
-            @PathVariable UUID id, @RequestBody @Valid PatchProductRequest request) {
+            @PathVariable UUID id,
+            @RequestBody @Valid PatchProductRequest request) {
         Product product = service.update(mapper.toModel(id, request));
         return ResponseEntity.ok(mapper.toResponse(product));
     }

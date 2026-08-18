@@ -5,7 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,7 +15,6 @@ import java.util.UUID;
 @Table(name = "products")
 @Getter
 @Setter
-@EqualsAndHashCode(of = { "name" }, callSuper = false)
 public class ProductEntity extends AuditableEntity {
 
     @Id
