@@ -18,5 +18,21 @@ services:
       retries: 5
     restart: always
 
+  payment-system-product-service:
+    image: ghcr.io/yuryshakhau1/payment-system-product-service:latest
+    container_name: payment_system_product_service
+    profiles:
+      - docker
+    ports:
+      - "${PRODUCT_SERVICE_PORT}:${PRODUCT_SERVICE_PORT}"
+    environment:
+      - PRODUCT_SERVICE_PORT=${PRODUCT_SERVICE_PORT}
+      - PRODUCT_SERVICE_DB_NAME=${PRODUCT_SERVICE_DB_NAME}
+      - PRODUCT_SERVICE_DB_USERNAME=${PRODUCT_SERVICE_DB_USERNAME}
+      - PRODUCT_SERVICE_DB_PASSWORD=${PRODUCT_SERVICE_DB_PASSWORD}
+      - PRODUCT_SERVICE_DB_PORT=${PRODUCT_SERVICE_DB_PORT}
+    depends_on:
+      - product-service-db
+
 volumes:
   product_service_postgres_data:

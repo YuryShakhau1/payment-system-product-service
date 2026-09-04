@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -42,39 +44,33 @@ class ProductServiceImplTest {
     private ProductServiceImpl service;
 
     @Test
-    void shouldReturnAllProductsWhenNameIsNull() {
-        Pageable pageable = PageRequest.of(0, 20);
+    void shouldReturnProductsWhenFindingAll() {
+        var pageable = PageRequest.of(0, 10);
         var entity = new ProductEntity();
         var product = new Product();
         var entityPage = new PageImpl<>(List.of(entity));
 
-        when(repository.findAll(pageable)).thenReturn(entityPage);
+        when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(entityPage);
         when(mapper.toModel(entity)).thenReturn(product);
 
-        Page<Product> result = service.findAll(null, pageable);
+        Page<Product> result = service.findAll(null, false, pageable);
 
-        assertThat(result.getContent()).containsExactly(product);
-        verify(repository).findAll(pageable);
-        verify(repository, never()).findByNameStartingWith(anyString(), any(Pageable.class));
+        assertThat(result).isNotNull().containsExactly(product);
+        verify(repository).findAll(any(Specification.class), eq(pageable));
         verify(mapper).toModel(entity);
     }
 
     @Test
-    void shouldReturnProductsByNameWhenNameIsProvided() {
-        Pageable pageable = PageRequest.of(0, 20);
-        var entity = new ProductEntity();
-        var product = new Product();
-        var entityPage = new PageImpl<>(List.of(entity));
+    void shouldReturnEmptyPageWhenNoProductsFound() {
+        var pageable = PageRequest.of(0, 10);
 
-        when(repository.findByNameStartingWith("phone", pageable)).thenReturn(entityPage);
-        when(mapper.toModel(entity)).thenReturn(product);
+        when(repository.findAll(any(Specification.class), eq(pageable))).thenReturn(Page.empty());
 
-        Page<Product> result = service.findAll("phone", pageable);
+        Page<Product> result = service.findAll("Phone", false, pageable);
 
-
-        assertThat(result.getContent()).containsExactly(product);
-        verify(repository).findByNameStartingWith("phone", pageable);
-        verify(repository, never()).findAll(any(Pageable.class));
+        assertThat(result).isEmpty();
+        verify(repository).findAll(any(Specification.class), eq(pageable));
+        verifyNoInteractions(mapper);
     }
 
     @Test

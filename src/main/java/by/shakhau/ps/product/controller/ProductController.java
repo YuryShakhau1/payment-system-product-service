@@ -1,8 +1,10 @@
 package by.shakhau.ps.product.controller;
 
 import by.shakhau.ps.product.controller.dto.mapper.ProductDtoMapper;
+import by.shakhau.ps.product.controller.dto.request.CreateProductRequest;
+import by.shakhau.ps.product.controller.dto.request.PatchProductRequest;
 import by.shakhau.ps.product.controller.dto.request.ProductIdsRequest;
-import by.shakhau.ps.product.controller.dto.request.ProductRequest;
+import by.shakhau.ps.product.controller.dto.request.ProductListRequest;
 import by.shakhau.ps.product.controller.dto.response.ProductResponse;
 import by.shakhau.ps.product.service.ProductService;
 import by.shakhau.ps.product.service.model.Product;
@@ -40,13 +42,14 @@ public class ProductController {
     @GetMapping(produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<Page<ProductResponse>> findProducts(
             @RequestParam(required = false) String name,
+            @RequestParam(required = false) Boolean deleted,
             @PageableDefault(
                     page = 0,
                     size = 20,
                     sort = "name",
                     direction = Sort.Direction.ASC)
             Pageable pageable) {
-        return ResponseEntity.ok(service.findAll(name, pageable).map(mapper::toResponse));
+        return ResponseEntity.ok(service.findAll(name, deleted, pageable).map(mapper::toResponse));
     }
 
     @GetMapping(value = "/{id}", produces = APPLICATION_JSON_VALUE)
@@ -63,14 +66,26 @@ public class ProductController {
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProductResponse> createProduct(@RequestBody @Valid ProductRequest request) {
+    public ResponseEntity<ProductResponse> createProduct(@RequestBody @Valid CreateProductRequest request) {
         Product product = service.create(mapper.toModel(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(mapper.toResponse(product));
     }
 
+    @PostMapping(value = "/list", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<ProductResponse>> createProducts(@RequestBody @Valid ProductListRequest request) {
+        List<Product> products = request.getProducts().stream()
+                .map(mapper::toModel)
+                .toList();
+        List<ProductResponse> createProducts = service.create(products).stream()
+                .map(mapper::toResponse)
+                .toList();
+        return ResponseEntity.status(HttpStatus.CREATED).body(createProducts);
+    }
+
     @PatchMapping(value = "/{id}", consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public ResponseEntity<ProductResponse> updateProduct(
-            @PathVariable UUID id, @RequestBody @Valid ProductRequest request) {
+            @PathVariable UUID id,
+            @RequestBody @Valid PatchProductRequest request) {
         Product product = service.update(mapper.toModel(id, request));
         return ResponseEntity.ok(mapper.toResponse(product));
     }

@@ -2,6 +2,7 @@ package by.shakhau.ps.product.service.impl;
 
 import by.shakhau.ps.product.repository.ProductRepository;
 import by.shakhau.ps.product.repository.entity.ProductEntity;
+import by.shakhau.ps.product.repository.specification.ProductSpecifications;
 import by.shakhau.ps.product.service.ProductService;
 import by.shakhau.ps.product.service.exception.ResourceForbiddenException;
 import by.shakhau.ps.product.service.exception.ResourceNotFoundException;
@@ -11,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,22 +26,19 @@ public class ProductServiceImpl implements ProductService {
     private final ProductRepository repository;
 
     @Override
-    public Page<Product> findAll(String name, Pageable pageable) {
-        Page<ProductEntity> products;
-        if (name == null) {
-            products = repository.findAll(pageable);
-        } else {
-            products = repository.findByNameStartingWith(name, pageable);
-        }
-
-        return products.map(mapper::toModel);
-    }
-
-    @Override
     public List<Product> findByIdIn(List<UUID> ids) {
         return repository.findAllById(ids).stream()
                 .map(mapper::toModel)
                 .toList();
+    }
+
+    @Override
+    public Page<Product> findAll(String name, Boolean deleted, Pageable pageable) {
+        Specification<ProductEntity> specification = Specification.allOf(
+                ProductSpecifications.hasName(name),
+                ProductSpecifications.deleted(deleted));
+
+        return repository.findAll(specification, pageable).map(mapper::toModel);
     }
 
     @Override
@@ -48,6 +47,15 @@ public class ProductServiceImpl implements ProductService {
                 .map(mapper::toModel)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Product with id = %s nof found".formatted(id)));
+    }
+
+    @Override
+    public List<Product> create(List<Product> products) {
+        List<ProductEntity> savedProducts = repository.saveAll(
+                products.stream()
+                        .map(p -> mapper.toEntity(false, p))
+                        .toList());
+        return savedProducts.stream().map(mapper::toModel).toList();
     }
 
     @Transactional
